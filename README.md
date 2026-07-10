@@ -1,3 +1,15 @@
+---
+title: SNI Ecuador IA Dashboard
+emoji: ⚡
+colorFrom: blue
+colorTo: indigo
+sdk: streamlit
+sdk_version: 1.55.0
+app_file: app.py
+pinned: false
+license: mit
+---
+
 # Sistema IA — SNI Ecuador
 
 Dashboard interactivo del **Sistema de modelado explicativo del Sistema Nacional Interconectado del Ecuador**, desarrollado como parte del Trabajo de Fin de Máster (TFM) en Inteligencia Artificial Aplicada — UIDE / EIG.
