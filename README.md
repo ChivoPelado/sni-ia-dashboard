@@ -72,30 +72,6 @@ sni-ia-dashboard/
 
 ---
 
-## Deploy actual
-
-Publicado temporalmente en:
-
-**http://134.56.159.55:8890/sni/**
-
-Corre como servicio systemd en un servidor Linux propio (Ubuntu, Python 3.12), detrás de nginx como reverse proxy en el puerto 8890 (redirige `location /sni/` a `127.0.0.1:8595`).
-
-### Actualizar el deploy
-
-```bash
-ssh andres@<server>
-cd /opt/sni-dashboard
-git pull
-sudo systemctl restart sni-dashboard
-```
-
-### Alternativas de hosting
-
-- **Docker** — usar el `Dockerfile` incluido en la raíz (Python 3.11-slim, puerto 7860). Compatible con Hugging Face Spaces (SDK Docker), Google Cloud Run, Fly.io, etc.
-- **Streamlit Community Cloud** — requiere `>1 GB RAM` porque los 4 SHAP explainers + XGBoost se cargan en memoria. El free tier (1 GB) es insuficiente.
-
----
-
 ## Notas metodológicas
 
 - **Split temporal**: entrenamiento 2009–2022, validación/test 2023–2025.
