@@ -56,6 +56,8 @@ sni-ia-dashboard/
 ├── Dockerfile                              # Imagen para deploys que requieran contenedor
 ├── .streamlit/
 │   └── config.toml                         # Tema light forzado
+├── notebooks/
+│   └── entrenamiento_modelos.ipynb         # Pipeline de entrenamiento (produce los .joblib)
 ├── data/
 │   ├── dataset_analitico_diario.csv        # 6,028 días × 16 variables
 │   └── dataset_analitico_mensual_regimenes.csv  # 198 meses + régimen K-Means
@@ -69,6 +71,8 @@ sni-ia-dashboard/
     ├── xgb_diario_exportacion.joblib       # XGBoost exportación
     └── shap_diario_*.joblib                # 4 SHAP explainers
 ```
+
+**Reproducibilidad**: el notebook `notebooks/entrenamiento_modelos.ipynb` es el pipeline de entrenamiento que produce todos los `.joblib` de la carpeta `models/`. Corriéndolo sobre el mismo dataset se regeneran los modelos con estado equivalente. El dashboard (`app.py`) solo hace inferencia — no entrena nada en runtime.
 
 ---
 
