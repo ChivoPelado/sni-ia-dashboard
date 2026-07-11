@@ -1,92 +1,73 @@
 # SNI Ecuador — Modelado explicativo
 
-Dashboard interactivo del **Sistema de modelado explicativo del Sistema Nacional Interconectado del Ecuador**, desarrollado como parte del Trabajo de Fin de Máster (TFM) en Inteligencia Artificial Aplicada — UIDE / EIG.
+Sistema de modelado explicativo del Sistema Nacional Interconectado (SNI) del Ecuador para el análisis del comportamiento operativo entre 2009 y 2025. Desarrollado como componente del Trabajo de Fin de Máster en Inteligencia Artificial Aplicada, Universidad Internacional del Ecuador (UIDE) en convenio con la Escuela Internacional de Postgrados (EIG).
 
 **Autor:** Andrés Herrera
-**Periodo analizado:** 2009 – 2025 (6,028 días, 198 meses)
-**Fuente de datos:** CENACE — SMEC (Sistema de Medición de Energía Comercial)
+**Periodo:** enero 2009 – marzo 2025 (6 028 días; 198 meses)
+**Fuentes primarias:** CENACE — Sistema de Medición de Energía Comercial (SMEC)
 
----
+## Resumen
 
-## Qué hace el sistema
+La aplicación provee un entorno interactivo para la exploración de las relaciones entre generación eléctrica, intercambio internacional con Colombia y Perú, y variables exógenas del sistema (hidrología, índice ENSO, precipitación en embalses, calendario y demografía). El enfoque es descriptivo–explicativo: los modelos se emplean para caracterizar patrones históricos y cuantificar la contribución relativa de cada variable a los resultados observados.
 
-El dashboard integra cuatro técnicas de aprendizaje automático para analizar y explicar el comportamiento operativo del Sistema Nacional Interconectado:
+## Modelos incluidos
 
-| Modelo | Rol |
-|--------|-----|
-| **K-Means** (k=5) | Identifica los 5 regímenes operativos recurrentes del sistema |
-| **Random Forest** | Evalúa si las variables exógenas (caudal, ONI, precipitación, población) explican los regímenes |
-| **XGBoost + SHAP** | Explica día a día las causas de la generación e intercambio (4 modelos) |
-| **KNN** | Recupera precedentes históricos con condiciones similares |
+| Componente | Función | Detalles técnicos |
+|-----------|---------|-------------------|
+| K-Means | Segmentación no supervisada de regímenes operativos mensuales | k=5; selección por índice de Calinski–Harabasz |
+| Random Forest | Clasificación supervisada de regímenes a partir de variables exógenas | 200 árboles; validación cruzada 5-Fold; F1-macro ≈ 0,396 |
+| XGBoost + SHAP | Regresión explicativa de generación e intercambio en resolución diaria | Cuatro modelos independientes: generación hidroeléctrica, generación térmica, importación y exportación; descomposición de contribuciones vía TreeExplainer |
+| K-Nearest Neighbors | Recuperación de precedentes históricos con condiciones similares | k=5; distancia euclidiana sobre variables normalizadas |
 
-El sistema **no predice el futuro**. Es un sistema de análisis explicativo y soporte a decisiones: caracteriza qué ocurrió históricamente bajo condiciones equivalentes.
+Los modelos operan sobre segmentos temporales disjuntos: 2009–2022 para entrenamiento y 2023–2025 para validación y prueba.
 
----
+## Secciones de la aplicación
 
-## Secciones del dashboard
+1. Evaluación: contexto general de la matriz energética, estacionalidad y correlaciones entre variables.
+2. Sistema Inteligente: visualización integrada de los cuatro modelos y sus salidas.
+3. Recomendador: caracterización estadística del régimen detectado y precedentes históricos comparables.
+4. Conclusiones: síntesis de hallazgos principales.
 
-1. **Evaluación** — Contexto general: composición de la matriz, estacionalidad, correlaciones.
-2. **Sistema Inteligente** — Los cuatro modelos integrados con visualización interactiva.
-3. **Recomendador** — Soporte a decisiones basado en régimen detectado + precedentes.
-4. **Conclusiones** — Hallazgos principales del análisis.
-
----
-
-## Ejecutar localmente
+## Ejecución local
 
 ```bash
-# 1. Instalar dependencias
 pip install -r requirements.txt
-
-# 2. Levantar la app
 streamlit run app.py
 ```
 
-La app abre en `http://localhost:8501`.
+La aplicación queda disponible en `http://localhost:8501`.
 
----
-
-## Estructura del repo
+## Estructura del proyecto
 
 ```
 sni-ia-dashboard/
-├── app.py                                  # Dashboard Streamlit (4 secciones)
-├── recomendador.py                         # Módulo de soporte a decisiones
-├── requirements.txt                        # Dependencias fijadas
-├── Dockerfile                              # Imagen para deploys que requieran contenedor
-├── .streamlit/
-│   └── config.toml                         # Tema light forzado
+├── app.py                                          Aplicación Streamlit
+├── recomendador.py                                 Módulo de soporte a decisiones
+├── requirements.txt                                Dependencias
+├── Dockerfile                                      Definición de imagen para contenedores
+├── .streamlit/config.toml                          Configuración de interfaz
 ├── notebooks/
-│   └── entrenamiento_modelos.ipynb         # Pipeline de entrenamiento (produce los .joblib)
+│   └── entrenamiento_modelos.ipynb                 Pipeline de entrenamiento
 ├── data/
-│   ├── dataset_analitico_diario.csv        # 6,028 días × 16 variables
-│   └── dataset_analitico_mensual_regimenes.csv  # 198 meses + régimen K-Means
+│   ├── dataset_analitico_diario.csv                Registros diarios (6 028 filas × 16 variables)
+│   └── dataset_analitico_mensual_regimenes.csv     Registros mensuales con régimen asignado (198 filas)
 └── models/
-    ├── metadata.joblib                     # Metadata general
-    ├── metadata_diario.joblib              # Metadata modelos XGBoost
-    ├── rf_clasificador_regimen.joblib      # Random Forest
-    ├── xgb_diario_gen_hidro.joblib         # XGBoost generación hidroeléctrica
-    ├── xgb_diario_gen_termica.joblib       # XGBoost generación térmica
-    ├── xgb_diario_importacion.joblib       # XGBoost importación
-    ├── xgb_diario_exportacion.joblib       # XGBoost exportación
-    └── shap_diario_*.joblib                # 4 SHAP explainers
+    ├── metadata.joblib                             Configuración del clasificador supervisado
+    ├── metadata_diario.joblib                      Configuración de los regresores diarios
+    ├── rf_clasificador_regimen.joblib              Random Forest entrenado
+    ├── xgb_diario_gen_hidro.joblib                 XGBoost — generación hidroeléctrica
+    ├── xgb_diario_gen_termica.joblib               XGBoost — generación térmica
+    ├── xgb_diario_importacion.joblib               XGBoost — importación
+    ├── xgb_diario_exportacion.joblib               XGBoost — exportación
+    └── shap_diario_*.joblib                        Explainers SHAP asociados a cada regresor
 ```
 
-**Reproducibilidad**: el notebook `notebooks/entrenamiento_modelos.ipynb` es el pipeline de entrenamiento que produce todos los `.joblib` de la carpeta `models/`. Corriéndolo sobre el mismo dataset se regeneran los modelos con estado equivalente. El dashboard (`app.py`) solo hace inferencia — no entrena nada en runtime.
+## Reproducibilidad
 
----
+El notebook `notebooks/entrenamiento_modelos.ipynb` contiene el pipeline completo de entrenamiento. Ejecutado sobre los datasets bajo `data/`, regenera los artefactos serializados de la carpeta `models/`. Los archivos `.joblib` corresponden a un estado congelado del entrenamiento con semilla fija.
 
-## Notas metodológicas
+## Datos y licencia
 
-- **Split temporal**: entrenamiento 2009–2022, validación/test 2023–2025.
-- **K-Means**: k=5 seleccionado por Calinski-Harabasz (máximo).
-- **Random Forest**: 200 árboles, 5-Fold CV, F1-macro ≈ 0.396.
-- **XGBoost**: 4 modelos independientes sobre 6,028 días con 7 features.
-- **SHAP**: TreeExplainer sobre cada XGBoost para descomposición día a día.
-- **KNN**: 5 vecinos, distancia euclidiana normalizada.
+Los datos empleados provienen de fuentes públicas del sector eléctrico ecuatoriano, principalmente CENACE y la Agencia de Regulación y Control de Energía y Recursos Naturales No Renovables (ARCERNNR), complementados con series de reanálisis climático y variables calendáricas.
 
----
-
-## Licencia
-
-Uso académico. Todos los datos originales provienen de fuentes públicas (CENACE, ARCERNNR).
+Código publicado bajo licencia MIT.
