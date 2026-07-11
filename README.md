@@ -1,15 +1,4 @@
----
-title: SNI Ecuador IA Dashboard
-emoji: ⚡
-colorFrom: blue
-colorTo: indigo
-sdk: docker
-app_port: 7860
-pinned: false
-license: mit
----
-
-# Sistema IA — SNI Ecuador
+# SNI Ecuador — Modelado explicativo
 
 Dashboard interactivo del **Sistema de modelado explicativo del Sistema Nacional Interconectado del Ecuador**, desarrollado como parte del Trabajo de Fin de Máster (TFM) en Inteligencia Artificial Aplicada — UIDE / EIG.
 
@@ -64,6 +53,9 @@ sni-ia-dashboard/
 ├── app.py                                  # Dashboard Streamlit (4 secciones)
 ├── recomendador.py                         # Módulo de soporte a decisiones
 ├── requirements.txt                        # Dependencias fijadas
+├── Dockerfile                              # Imagen para deploys que requieran contenedor
+├── .streamlit/
+│   └── config.toml                         # Tema light forzado
 ├── data/
 │   ├── dataset_analitico_diario.csv        # 6,028 días × 16 variables
 │   └── dataset_analitico_mensual_regimenes.csv  # 198 meses + régimen K-Means
@@ -80,14 +72,27 @@ sni-ia-dashboard/
 
 ---
 
-## Deploy — Streamlit Community Cloud
+## Deploy actual
 
-1. Empujar este repo a GitHub (público).
-2. Ir a [share.streamlit.io](https://share.streamlit.io) → **New app**.
-3. Seleccionar el repo, rama `main`, archivo `app.py`.
-4. **Deploy**.
+Publicado temporalmente en:
 
-En pocos minutos queda disponible en `https://<nombre>.streamlit.app`.
+**http://134.56.159.55:8890/sni/**
+
+Corre como servicio systemd en un servidor Linux propio (Ubuntu, Python 3.12), detrás de nginx como reverse proxy en el puerto 8890 (redirige `location /sni/` a `127.0.0.1:8595`).
+
+### Actualizar el deploy
+
+```bash
+ssh andres@<server>
+cd /opt/sni-dashboard
+git pull
+sudo systemctl restart sni-dashboard
+```
+
+### Alternativas de hosting
+
+- **Docker** — usar el `Dockerfile` incluido en la raíz (Python 3.11-slim, puerto 7860). Compatible con Hugging Face Spaces (SDK Docker), Google Cloud Run, Fly.io, etc.
+- **Streamlit Community Cloud** — requiere `>1 GB RAM` porque los 4 SHAP explainers + XGBoost se cargan en memoria. El free tier (1 GB) es insuficiente.
 
 ---
 
