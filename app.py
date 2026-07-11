@@ -16,7 +16,7 @@ from sklearn.model_selection import StratifiedKFold, cross_val_predict
 from sklearn.metrics import confusion_matrix
 import recomendador as rec_mod
 
-st.set_page_config(page_title="Sistema IA — SNI Ecuador", layout="wide")
+st.set_page_config(page_title="SNI Ecuador — Modelado explicativo", layout="wide")
 
 st.markdown("""
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -118,9 +118,9 @@ def sl(fig,title="",height=400,**kw):
 st.sidebar.markdown(
     "<div style='padding:20px 0 8px'>"
     "<p style='font-family:DM Serif Display,serif;font-size:1.15rem;color:#f1f5f9;margin:0'>"
-    "Sistema IA</p>"
+    "SNI Ecuador</p>"
     "<p style='font-family:IBM Plex Mono;font-size:0.6rem;color:#64748b;margin:4px 0 0;"
-    "letter-spacing:0.1em;text-transform:uppercase'>SNI Ecuador · 2009-2025 · v3.1</p></div>",
+    "letter-spacing:0.1em;text-transform:uppercase'>Modelado explicativo · 2009-2025</p></div>",
     unsafe_allow_html=True)
 st.sidebar.markdown("---")
 
