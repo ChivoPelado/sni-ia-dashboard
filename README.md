@@ -2,7 +2,6 @@
 
 Sistema de modelado explicativo del Sistema Nacional Interconectado (SNI) del Ecuador para el análisis del comportamiento operativo entre 2009 y 2025. Desarrollado como componente del Trabajo de Fin de Máster en Inteligencia Artificial Aplicada, Universidad Internacional del Ecuador (UIDE) en convenio con la Escuela Internacional de Postgrados (EIG).
 
-**Autor:** Andrés Herrera
 **Periodo:** enero 2009 – marzo 2025 (6 028 días; 198 meses)
 **Fuentes primarias:** CENACE — Sistema de Medición de Energía Comercial (SMEC)
 
